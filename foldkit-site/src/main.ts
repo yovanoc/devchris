@@ -2,6 +2,7 @@ import { Match as M, Schema as S } from 'effect'
 import { Command, Runtime } from 'foldkit'
 import { Document, html } from 'foldkit/html'
 import { m } from 'foldkit/message'
+import { evo } from 'foldkit/struct'
 
 // MODEL
 
@@ -26,124 +27,116 @@ export const init: Runtime.ProgramInit<Model, Message> = () => [
 
 // UPDATE
 
-export const update = (
-  model: Model,
-  message: Message,
-): readonly [Model, ReadonlyArray<Command.Command<Message>>] =>
+type UpdateReturn = readonly [Model, ReadonlyArray<Command.Command<Message>>]
+const withUpdateReturn = M.withReturnType<UpdateReturn>()
+
+export const update = (model: Model, message: Message): UpdateReturn =>
   M.value(message).pipe(
-    M.withReturnType<readonly [Model, ReadonlyArray<Command.Command<Message>>]>(),
+    withUpdateReturn,
     M.tagsExhaustive({
-      ClickedNav: ({ section }) => [{ ...model, activeSection: section }, []],
+      ClickedNav: ({ section }) => [
+        evo(model, { activeSection: () => section }),
+        [],
+      ],
     }),
   )
 
 // DATA
 
-const experience = [
+const approach = [
   {
-    role: 'Chief Technology Officer',
-    company: '[Your Company]',
-    period: '2021 — Present',
-    achievements: [
-      'Scaled engineering team from 5 to 40+ across 3 continents',
-      'Architected microservices migration, reducing downtime by 99.9%',
-      'Led technical due diligence for $50M Series B funding',
-    ],
+    index: '01',
+    title: 'Product-minded engineering',
+    description:
+      'I start with the problem, ship the smallest coherent solution, and stay close to the people who use it.',
   },
   {
-    role: 'VP of Engineering',
-    company: '[Previous Company]',
-    period: '2018 — 2021',
-    achievements: [
-      'Delivered flagship SaaS product 2 months ahead of schedule',
-      'Implemented robust CI/CD pipelines reducing deployment time by 80%',
-      'Mentored 10+ senior engineers into leadership roles',
-    ],
+    index: '02',
+    title: 'Systems that stay legible',
+    description:
+      'Strong types, explicit boundaries, and boring operations beat clever code that only its author can run.',
+  },
+  {
+    index: '03',
+    title: 'Depth when it matters',
+    description:
+      'From protocol clients to performance-sensitive Rust, I enjoy the details that turn fragile ideas into dependable tools.',
   },
 ]
 
 const skills = [
   { name: 'TypeScript', category: 'Languages' },
+  { name: 'Rust', category: 'Languages' },
+  { name: 'Solidity', category: 'Languages' },
   { name: 'JavaScript', category: 'Languages' },
-  { name: 'C#', category: 'Languages' },
-  { name: 'PHP', category: 'Languages' },
-  { name: 'NodeJS', category: 'Frameworks' },
-  { name: 'React', category: 'Frameworks' },
-  { name: 'Laravel', category: 'Frameworks' },
-  { name: 'Electron', category: 'Frameworks' },
-  { name: 'Docker', category: 'Infrastructure' },
-  { name: 'AWS', category: 'Infrastructure' },
-  { name: 'CI/CD', category: 'Infrastructure' },
-  { name: 'Kubernetes', category: 'Infrastructure' },
-  { name: 'Technical Strategy', category: 'Leadership' },
-  { name: 'Team Building', category: 'Leadership' },
-  { name: 'System Architecture', category: 'Leadership' },
-  { name: 'Agile Delivery', category: 'Leadership' },
+  { name: 'Effect', category: 'Runtime & Web' },
+  { name: 'Node.js', category: 'Runtime & Web' },
+  { name: 'React', category: 'Runtime & Web' },
+  { name: 'Laravel', category: 'Runtime & Web' },
+  { name: 'API design', category: 'Systems' },
+  { name: 'PostgreSQL', category: 'Systems' },
+  { name: 'Docker', category: 'Systems' },
+  { name: 'Cloudflare', category: 'Systems' },
+  { name: 'Product engineering', category: 'Practice' },
+  { name: 'Architecture', category: 'Practice' },
+  { name: 'Automation', category: 'Practice' },
+  { name: 'Technical direction', category: 'Practice' },
 ]
 
-const skillCategories = ['Languages', 'Frameworks', 'Infrastructure', 'Leadership']
+const skillCategories = ['Languages', 'Runtime & Web', 'Systems', 'Practice']
 
 const projects = [
   {
-    name: 'marketplace',
-    description: 'Web3 decentralized trading platform on Polygon',
-    impact: '$10M+ monthly volume • 50ms execution latency',
-    tags: ['TypeScript', 'Web3', 'Architecture'],
+    name: 'effect-cdp',
+    description:
+      'A type-safe Chrome DevTools Protocol client for Effect with streaming events and explicit error handling.',
+    detail: '58 protocol domains · generated types',
+    url: 'https://github.com/yovanoc/effect-cdp',
+    tags: ['TypeScript', 'Effect', 'CDP'],
   },
   {
-    name: 'cookietouch',
-    description: 'Enterprise-grade bot automation framework for Dofus Touch',
-    impact: '100k+ daily automated actions • Zero ban rate',
-    tags: ['TypeScript', 'NodeJS', 'Electron'],
+    name: 'finary',
+    description: 'A focused Rust API client for integrating with Finary.',
+    detail: 'Open source · Rust',
+    url: 'https://github.com/yovanoc/finary',
+    tags: ['Rust', 'API', 'Client'],
   },
   {
-    name: 'cookiebot',
-    description: 'Intelligent automation system scaling infrastructure',
-    impact: 'Reduced manual ops by 90% • 500+ nodes managed',
-    tags: ['TypeScript', 'NodeJS', 'Systems'],
+    name: 'mailsac',
+    description:
+      'A Mailsac API library designed to work in both the browser and Node.js.',
+    detail: 'Open source · TypeScript',
+    url: 'https://github.com/yovanoc/mailsac',
+    tags: ['TypeScript', 'API', 'Node.js'],
   },
   {
     name: 'lru',
-    description: 'High-performance LRU cache implementation',
-    impact: 'O(1) complexity • 3x faster than standard Map',
-    tags: ['TypeScript', 'Algorithm', 'Performance'],
-  },
-  {
-    name: 'xswf',
-    description: 'SWF file parser and reverse-engineering analyzer',
-    impact: 'Decoded 10k+ assets • Core to automation strategy',
-    tags: ['TypeScript', 'Binary', 'Reverse Engineering'],
-  },
-  {
-    name: 'starter',
-    description: 'Modern enterprise project scaffolding tool',
-    impact: 'Adopted by 5 teams • Cut setup time from days to minutes',
-    tags: ['TypeScript', 'CLI', 'Tooling'],
+    description:
+      'A finite key-value cache backed by a doubly linked list that keeps commonly used entries in memory.',
+    detail: 'O(1) key lookup · TypeScript',
+    url: 'https://github.com/yovanoc/lru',
+    tags: ['TypeScript', 'Algorithms', 'Performance'],
   },
   {
     name: 'codetube',
-    description: 'Code sharing and interactive tutorial platform',
-    impact: '10k+ active users • Real-time collaboration',
-    tags: ['TypeScript', 'React', 'Fullstack'],
-  },
-]
-
-const testimonials = [
-  {
-    quote: "Your testimonial quote here. Chris's technical leadership and architectural vision transformed our engineering organization.",
-    author: '[Your Name]',
-    role: '[Your Title]',
+    description: 'A YouTube-style video platform built with Laravel.',
+    detail: 'Open source · PHP',
+    url: 'https://github.com/yovanoc/codetube',
+    tags: ['PHP', 'Laravel', 'Product'],
   },
   {
-    quote: "Working under Chris's technical direction elevated our entire team. His ability to distill complex system problems into executable roadmaps is unmatched.",
-    author: '[Colleague Name]',
-    role: '[Their Title]',
+    name: 'saas',
+    description:
+      'A practical starter for building software-as-a-service products with Laravel.',
+    detail: 'Open source · PHP',
+    url: 'https://github.com/yovanoc/saas',
+    tags: ['PHP', 'Laravel', 'SaaS'],
   },
 ]
 
 const socials = [
-  { name: 'GitHub', url: 'https://github.com/devchris', handle: '@devchris' },
-  { name: 'LinkedIn', url: 'https://linkedin.com/in/devchris', handle: 'in/devchris' },
+  { name: 'GitHub', url: 'https://github.com/yovanoc' },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/yovanoc/' },
 ]
 
 // VIEW
@@ -152,19 +145,31 @@ export const view = (model: Model): Document => {
   const h = html<Message>()
 
   return {
-    title: 'Chris - CTO & Architecture Expert',
+    title: 'Christopher Yovanovitch — Software Engineer',
     body: h.div(
-      [h.Class('min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-cyan-500/30')],
       [
+        h.Class(
+          'min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-cyan-500/30',
+        ),
+      ],
+      [
+        h.a(
+          [
+            h.Class(
+              'sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-slate-950',
+            ),
+            h.Attribute('href', '#content'),
+          ],
+          ['Skip to content'],
+        ),
         navView(h, model),
         h.main(
-          [],
+          [h.Id('content')],
           [
             heroView(h),
-            experienceView(h),
+            approachView(h),
             skillsView(h),
             projectsView(h),
-            testimonialsView(h),
             contactView(h),
           ],
         ),
@@ -180,28 +185,40 @@ const navView = (h: ReturnType<typeof html<Message>>, model: Model) =>
   h.nav(
     [
       h.Class(
-        'fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50 transition-all duration-300',
+        'fixed top-0 left-0 right-0 z-50 border-b border-slate-800/50 bg-slate-950/85 backdrop-blur-md',
       ),
+      h.Attribute('aria-label', 'Primary navigation'),
     ],
     [
       h.div(
-        [h.Class('max-w-6xl mx-auto px-6 py-4 flex items-center justify-between')],
         [
-          h.div(
-            [h.Class('text-lg font-bold tracking-tight text-white flex items-center gap-2')],
+          h.Class(
+            'max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4',
+          ),
+        ],
+        [
+          h.a(
             [
-              h.span([h.Class('text-cyan-400 font-mono')], ['>_']),
-              'devchris',
+              h.Class(
+                'text-sm sm:text-lg font-bold tracking-tight text-white flex items-center gap-2 shrink-0',
+              ),
+              h.Attribute('href', '#hero'),
+              h.Attribute('aria-label', 'DevChris home'),
+              h.OnClick(ClickedNav({ section: 'hero' })),
             ],
+            [h.span([h.Class('text-cyan-400 font-mono')], ['>_']), 'devchris'],
           ),
           h.div(
-            [h.Class('hidden md:flex gap-8 text-sm font-medium')],
             [
-              navLink(h, 'hero', 'Home', model.activeSection),
-              navLink(h, 'experience', 'Experience', model.activeSection),
-              navLink(h, 'skills', 'Expertise', model.activeSection),
-              navLink(h, 'projects', 'Impact', model.activeSection),
-              navLink(h, 'contact', 'Connect', model.activeSection),
+              h.Class(
+                'flex items-center gap-3 sm:gap-6 md:gap-8 text-xs sm:text-sm font-medium',
+              ),
+            ],
+            [
+              navLink(h, 'about', 'About', model.activeSection),
+              navLink(h, 'skills', 'Stack', model.activeSection),
+              navLink(h, 'projects', 'Work', model.activeSection),
+              navLink(h, 'contact', 'Contact', model.activeSection),
             ],
           ),
         ],
@@ -209,16 +226,24 @@ const navView = (h: ReturnType<typeof html<Message>>, model: Model) =>
     ],
   )
 
-const navLink = (h: ReturnType<typeof html<Message>>, section: string, label: string, active: string) =>
+const navLink = (
+  h: ReturnType<typeof html<Message>>,
+  section: string,
+  label: string,
+  active: string,
+) =>
   h.a(
     [
       h.Class(
-        `cursor-pointer transition-colors ${
-          active === section ? 'text-cyan-400' : 'text-slate-400 hover:text-slate-100'
+        `transition-colors ${
+          active === section
+            ? 'text-cyan-400'
+            : 'text-slate-400 hover:text-slate-100'
         }`,
       ),
       h.OnClick(ClickedNav({ section })),
       h.Attribute('href', `#${section}`),
+      h.Attribute('aria-current', active === section ? 'page' : 'false'),
     ],
     [label],
   )
@@ -227,57 +252,152 @@ const navLink = (h: ReturnType<typeof html<Message>>, section: string, label: st
 
 const heroView = (h: ReturnType<typeof html<Message>>) =>
   h.section(
-    [h.Class('min-h-screen flex items-center justify-center px-6 pt-24 relative overflow-hidden'), h.Id('hero')],
     [
-      // Decorative background elements
-      h.div([h.Class('absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none')], []),
-      h.div([h.Class('absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none')], []),
-
+      h.Class(
+        'min-h-screen flex items-center justify-center px-6 pt-28 pb-20 relative overflow-hidden scroll-mt-24',
+      ),
+      h.Id('hero'),
+    ],
+    [
       h.div(
-        [h.Class('max-w-4xl w-full relative z-10')],
+        [
+          h.Class(
+            'absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none',
+          ),
+          h.Attribute('aria-hidden', 'true'),
+        ],
+        [],
+      ),
+      h.div(
+        [
+          h.Class(
+            'absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none',
+          ),
+          h.Attribute('aria-hidden', 'true'),
+        ],
+        [],
+      ),
+      h.div(
+        [
+          h.Class(
+            'max-w-6xl w-full relative z-10 grid lg:grid-cols-[minmax(0,1fr)_20rem] items-center gap-12 lg:gap-20',
+          ),
+        ],
         [
           h.div(
-            [h.Class('mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 font-mono text-xs')],
+            [],
             [
-              h.span([h.Class('w-2 h-2 rounded-full bg-cyan-400 animate-pulse')], []),
-              'SYSTEM.STATUS: ONLINE',
-            ],
-          ),
-          h.h1(
-            [h.Class('text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight')],
-            [
-              'Engineering ',
-              h.span([h.Class('gradient-text')], ['Excellence']),
-              h.br([]),
-              '& Technical Leadership',
-            ],
-          ),
-          h.p(
-            [h.Class('text-xl md:text-2xl text-slate-400 mb-10 max-w-2xl leading-relaxed')],
-            [
-              'Chief Technology Officer translating complex business requirements into scalable, robust architectures while building high-performing engineering cultures.',
+              h.div(
+                [
+                  h.Class(
+                    'mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 font-mono text-xs',
+                  ),
+                ],
+                [
+                  h.span(
+                    [
+                      h.Class('w-2 h-2 rounded-full bg-cyan-400'),
+                      h.Attribute('aria-hidden', 'true'),
+                    ],
+                    [],
+                  ),
+                  'LILLE, FRANCE · BUILDER BY NATURE',
+                ],
+              ),
+              h.p(
+                [
+                  h.Class(
+                    'text-sm font-mono tracking-[0.18em] text-slate-400 uppercase mb-4',
+                  ),
+                ],
+                ['Christopher Yovanovitch'],
+              ),
+              h.h1(
+                [
+                  h.Class(
+                    'text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-[1.05] text-balance',
+                  ),
+                ],
+                [
+                  'I turn hard problems into ',
+                  h.span(
+                    [h.Class('gradient-text')],
+                    ['software that feels simple.'],
+                  ),
+                ],
+              ),
+              h.p(
+                [
+                  h.Class(
+                    'text-lg md:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed text-pretty',
+                  ),
+                ],
+                [
+                  'Full-stack software engineer working across TypeScript, Rust, and Solidity—from product architecture to the details that make systems last.',
+                ],
+              ),
+              h.div(
+                [h.Class('flex flex-col sm:flex-row gap-4')],
+                [
+                  h.a(
+                    [
+                      h.Class(
+                        'px-7 py-3.5 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-semibold rounded-lg transition shadow-[0_0_24px_rgba(34,211,238,0.24)] text-center',
+                      ),
+                      h.Attribute('href', '#projects'),
+                    ],
+                    ['Explore my work'],
+                  ),
+                  h.a(
+                    [
+                      h.Class(
+                        'px-7 py-3.5 bg-slate-900 border border-slate-700 text-slate-200 rounded-lg hover:bg-slate-800 hover:border-slate-600 transition font-medium text-center',
+                      ),
+                      h.Attribute('href', '#contact'),
+                    ],
+                    ['Start a conversation'],
+                  ),
+                ],
+              ),
             ],
           ),
           h.div(
-            [h.Class('flex flex-wrap gap-4')],
+            [h.Class('mx-auto w-full max-w-xs order-first lg:order-last')],
             [
-              h.a(
+              h.div(
                 [
                   h.Class(
-                    'px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold rounded-lg transition shadow-[0_0_20px_rgba(6,182,212,0.3)]',
+                    'glass-panel rounded-[2rem] p-3 rotate-2 hover:rotate-0 transition duration-500 shadow-2xl shadow-cyan-950/30',
                   ),
-                  h.Attribute('href', '#experience'),
                 ],
-                ['Explore Leadership'],
-              ),
-              h.a(
                 [
-                  h.Class(
-                    'px-8 py-4 bg-slate-900 border border-slate-700 text-slate-300 rounded-lg hover:bg-slate-800 transition font-medium',
+                  h.img([
+                    h.Class(
+                      'w-full aspect-square object-cover rounded-[1.45rem] bg-white',
+                    ),
+                    h.Attribute('src', '/profile.png'),
+                    h.Attribute(
+                      'alt',
+                      'Portrait illustration of Christopher Yovanovitch',
+                    ),
+                    h.Attribute('width', '460'),
+                    h.Attribute('height', '460'),
+                    h.Attribute('decoding', 'async'),
+                  ]),
+                  h.div(
+                    [h.Class('px-3 pt-4 pb-2')],
+                    [
+                      h.p(
+                        [h.Class('text-white font-semibold')],
+                        ['Software engineer'],
+                      ),
+                      h.p(
+                        [h.Class('text-slate-400 text-sm mt-1 font-mono')],
+                        ['TypeScript · Rust · Solidity'],
+                      ),
+                    ],
                   ),
-                  h.Attribute('href', '#projects'),
                 ],
-                ['View Impact'],
               ),
             ],
           ),
@@ -286,58 +406,55 @@ const heroView = (h: ReturnType<typeof html<Message>>) =>
     ],
   )
 
-// EXPERIENCE
+// APPROACH
 
-const experienceView = (h: ReturnType<typeof html<Message>>) =>
+const approachView = (h: ReturnType<typeof html<Message>>) =>
   h.section(
-    [h.Class('py-24 px-6 relative'), h.Id('experience')],
+    [h.Class('py-24 px-6 bg-slate-900/30 scroll-mt-20'), h.Id('about')],
     [
       h.div(
-        [h.Class('max-w-4xl mx-auto')],
+        [h.Class('max-w-6xl mx-auto')],
         [
           h.div(
-            [h.Class('mb-16')],
+            [h.Class('mb-14 max-w-3xl')],
             [
-              h.span([h.Class('text-indigo-400 font-mono text-sm')], ['01 // TIMELINE']),
-              h.h2([h.Class('text-3xl md:text-4xl font-bold mt-2')], ['Executive Leadership']),
+              h.span(
+                [h.Class('text-indigo-300 font-mono text-sm')],
+                ['01 // APPROACH'],
+              ),
+              h.h2(
+                [h.Class('text-3xl md:text-5xl font-bold mt-3 text-balance')],
+                ['Builder first. Systems thinker always.'],
+              ),
+              h.p(
+                [h.Class('text-lg text-slate-400 mt-5 leading-relaxed')],
+                [
+                  'Curious by default, I enjoy ambitious technical challenges and care about the quality of the systems I lead from idea to production.',
+                ],
+              ),
             ],
           ),
           h.div(
-            [h.Class('space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-800 before:to-transparent')],
-            experience.map((exp) =>
-              h.div(
-                [h.Class(`relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active`)],
+            [h.Class('grid md:grid-cols-3 gap-6')],
+            approach.map(item =>
+              h.article(
                 [
-                  // Timeline dot
-                  h.div(
-                    [h.Class('flex items-center justify-center w-10 h-10 rounded-full border-4 border-slate-950 bg-slate-800 group-hover:bg-indigo-500 group-hover:border-indigo-400/30 transition duration-300 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm absolute left-0 md:left-1/2 -translate-x-1/2')],
-                    [],
+                  h.Class(
+                    'glass-panel p-7 rounded-2xl group hover:border-cyan-500/40 transition duration-300',
                   ),
-                  // Content card
-                  h.div(
-                    [h.Class('w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] glass-panel p-6 md:p-8 rounded-2xl group-hover:border-indigo-500/50 transition duration-300')],
-                    [
-                      h.div(
-                        [h.Class('flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2')],
-                        [
-                          h.h3([h.Class('text-xl font-bold text-white')], [exp.role]),
-                          h.span([h.Class('px-3 py-1 bg-slate-800/50 text-indigo-300 text-xs font-mono rounded-full')], [exp.period]),
-                        ],
-                      ),
-                      h.h4([h.Class('text-lg text-slate-300 mb-6 font-medium')], [exp.company]),
-                      h.ul(
-                        [h.Class('space-y-3')],
-                        exp.achievements.map((achievement) =>
-                          h.li(
-                            [h.Class('text-slate-400 text-sm flex gap-3 leading-relaxed')],
-                            [
-                              h.span([h.Class('text-cyan-500 mt-1')], ['▹']),
-                              h.span([], [achievement]),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                ],
+                [
+                  h.span(
+                    [h.Class('text-cyan-400 font-mono text-sm')],
+                    [item.index],
+                  ),
+                  h.h3(
+                    [h.Class('text-xl font-bold text-white mt-8 mb-3')],
+                    [item.title],
+                  ),
+                  h.p(
+                    [h.Class('text-slate-400 leading-relaxed')],
+                    [item.description],
                   ),
                 ],
               ),
@@ -352,41 +469,78 @@ const experienceView = (h: ReturnType<typeof html<Message>>) =>
 
 const skillsView = (h: ReturnType<typeof html<Message>>) =>
   h.section(
-    [h.Class('py-24 px-6 bg-slate-900/30'), h.Id('skills')],
+    [h.Class('py-24 px-6 scroll-mt-20'), h.Id('skills')],
     [
       h.div(
         [h.Class('max-w-5xl mx-auto')],
         [
           h.div(
-            [h.Class('mb-16')],
+            [h.Class('mb-14')],
             [
-              h.span([h.Class('text-cyan-400 font-mono text-sm')], ['02 // EXPERTISE']),
-              h.h2([h.Class('text-3xl md:text-4xl font-bold mt-2')], ['Technical Arsenal']),
+              h.span(
+                [h.Class('text-cyan-300 font-mono text-sm')],
+                ['02 // STACK'],
+              ),
+              h.h2(
+                [h.Class('text-3xl md:text-5xl font-bold mt-3')],
+                ['Tools I reach for.'],
+              ),
+              h.p(
+                [
+                  h.Class(
+                    'text-lg text-slate-400 mt-5 max-w-2xl leading-relaxed',
+                  ),
+                ],
+                [
+                  'A deliberately broad toolkit, chosen to fit the problem rather than the trend.',
+                ],
+              ),
             ],
           ),
           h.div(
-            [h.Class('grid md:grid-cols-2 lg:grid-cols-4 gap-8')],
-            skillCategories.map((category) =>
+            [h.Class('grid sm:grid-cols-2 lg:grid-cols-4 gap-8')],
+            skillCategories.map(category =>
               h.div(
                 [h.Class('space-y-6')],
                 [
                   h.h3(
-                    [h.Class('text-lg font-semibold text-white border-b border-slate-800 pb-2')],
+                    [
+                      h.Class(
+                        'text-base font-semibold text-white border-b border-slate-800 pb-3',
+                      ),
+                    ],
                     [category],
                   ),
                   h.div(
                     [h.Class('flex flex-col gap-3')],
-                    skills
-                      .filter((s) => s.category === category)
-                      .map((skill) =>
-                        h.div(
-                          [h.Class('flex items-center gap-3 group')],
-                          [
-                            h.div([h.Class('w-1.5 h-1.5 rounded-full bg-slate-700 group-hover:bg-cyan-400 transition')], []),
-                            h.span([h.Class('text-slate-300 font-medium group-hover:text-white transition')], [skill.name]),
-                          ],
-                        ),
-                      ),
+                    skills.flatMap(skill =>
+                      skill.category === category
+                        ? [
+                            h.div(
+                              [h.Class('flex items-center gap-3 group')],
+                              [
+                                h.div(
+                                  [
+                                    h.Class(
+                                      'w-1.5 h-1.5 rounded-full bg-slate-700 group-hover:bg-cyan-400 transition',
+                                    ),
+                                    h.Attribute('aria-hidden', 'true'),
+                                  ],
+                                  [],
+                                ),
+                                h.span(
+                                  [
+                                    h.Class(
+                                      'text-slate-300 font-medium group-hover:text-white transition',
+                                    ),
+                                  ],
+                                  [skill.name],
+                                ),
+                              ],
+                            ),
+                          ]
+                        : [],
+                    ),
                   ),
                 ],
               ),
@@ -401,105 +555,116 @@ const skillsView = (h: ReturnType<typeof html<Message>>) =>
 
 const projectsView = (h: ReturnType<typeof html<Message>>) =>
   h.section(
-    [h.Class('py-24 px-6'), h.Id('projects')],
+    [h.Class('py-24 px-6 bg-slate-900/30 scroll-mt-20'), h.Id('projects')],
     [
       h.div(
         [h.Class('max-w-6xl mx-auto')],
         [
           h.div(
-            [h.Class('mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6')],
+            [
+              h.Class(
+                'mb-14 flex flex-col md:flex-row md:items-end justify-between gap-6',
+              ),
+            ],
             [
               h.div(
                 [],
                 [
-                  h.span([h.Class('text-indigo-400 font-mono text-sm')], ['03 // IMPACT']),
-                  h.h2([h.Class('text-3xl md:text-4xl font-bold mt-2')], ['Featured Initiatives']),
+                  h.span(
+                    [h.Class('text-indigo-300 font-mono text-sm')],
+                    ['03 // SELECTED WORK'],
+                  ),
+                  h.h2(
+                    [h.Class('text-3xl md:text-5xl font-bold mt-3')],
+                    ['Open source, across the stack.'],
+                  ),
                 ],
               ),
               h.p(
-                [h.Class('text-slate-400 max-w-md md:text-right text-sm')],
-                ['Architectural solutions delivering measurable business value and performance at scale.'],
+                [
+                  h.Class(
+                    'text-slate-400 max-w-md md:text-right leading-relaxed',
+                  ),
+                ],
+                [
+                  'Public work spanning typed tooling, Rust clients, algorithms, and web products.',
+                ],
               ),
             ],
           ),
           h.div(
             [h.Class('grid md:grid-cols-2 lg:grid-cols-3 gap-6')],
-            projects.map((project) =>
-              h.div(
-                [h.Class('glass-panel p-8 rounded-2xl flex flex-col h-full group hover:-translate-y-1 transition duration-300 hover:shadow-[0_10px_30px_rgba(56,189,248,0.05)]')],
+            projects.map(project =>
+              h.a(
+                [
+                  h.Class(
+                    'glass-panel p-7 rounded-2xl flex flex-col h-full group hover:-translate-y-1 hover:border-cyan-500/40 transition duration-300 hover:shadow-[0_12px_32px_rgba(34,211,238,0.06)]',
+                  ),
+                  h.Attribute('href', project.url),
+                  h.Attribute('target', '_blank'),
+                  h.Attribute('rel', 'noopener noreferrer'),
+                  h.Attribute('aria-label', `View ${project.name} on GitHub`),
+                ],
                 [
                   h.div(
                     [h.Class('mb-6')],
                     [
-                      h.div([h.Class('text-cyan-400 font-mono text-2xl mb-4 opacity-50 group-hover:opacity-100 transition')], ['{/}']),
-                      h.h3([h.Class('text-xl font-bold text-white mb-2')], [project.name]),
-                      h.p([h.Class('text-slate-400 text-sm leading-relaxed min-h-12')], [project.description]),
+                      h.div(
+                        [
+                          h.Class(
+                            'text-cyan-400 font-mono text-2xl mb-5 opacity-60 group-hover:opacity-100 transition',
+                          ),
+                          h.Attribute('aria-hidden', 'true'),
+                        ],
+                        ['{/}'],
+                      ),
+                      h.h3(
+                        [h.Class('text-xl font-bold text-white mb-3')],
+                        [project.name],
+                      ),
+                      h.p(
+                        [
+                          h.Class(
+                            'text-slate-400 text-sm leading-relaxed min-h-16',
+                          ),
+                        ],
+                        [project.description],
+                      ),
                     ],
                   ),
                   h.div(
                     [h.Class('mt-auto')],
                     [
                       h.div(
-                        [h.Class('py-4 border-t border-slate-800/50 mb-4')],
+                        [h.Class('py-4 border-t border-slate-800/60 mb-4')],
                         [
-                          h.span([h.Class('block text-xs uppercase tracking-wider text-slate-500 font-semibold mb-1')], ['Key Impact']),
-                          h.span([h.Class('text-indigo-300 text-sm font-medium')], [project.impact]),
+                          h.span(
+                            [h.Class('text-indigo-300 text-sm font-medium')],
+                            [project.detail],
+                          ),
+                          h.span(
+                            [
+                              h.Class(
+                                'float-right text-slate-500 group-hover:text-cyan-300 transition',
+                              ),
+                              h.Attribute('aria-hidden', 'true'),
+                            ],
+                            ['↗'],
+                          ),
                         ],
                       ),
                       h.div(
                         [h.Class('flex flex-wrap gap-2')],
-                        project.tags.map((tag) =>
+                        project.tags.map(tag =>
                           h.span(
-                            [h.Class('px-2.5 py-1 bg-slate-900 border border-slate-800 text-slate-300 text-xs rounded font-mono')],
+                            [
+                              h.Class(
+                                'px-2.5 py-1 bg-slate-950/70 border border-slate-800 text-slate-300 text-xs rounded font-mono',
+                              ),
+                            ],
                             [tag],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    ],
-  )
-
-// TESTIMONIALS
-
-const testimonialsView = (h: ReturnType<typeof html<Message>>) =>
-  h.section(
-    [h.Class('py-24 px-6 bg-slate-900/30'), h.Id('testimonials')],
-    [
-      h.div(
-        [h.Class('max-w-5xl mx-auto')],
-        [
-          h.div(
-            [h.Class('mb-16 text-center')],
-            [
-              h.span([h.Class('text-cyan-400 font-mono text-sm')], ['04 // VALIDATION']),
-              h.h2([h.Class('text-3xl md:text-4xl font-bold mt-2')], ['Executive Endorsements']),
-            ],
-          ),
-          h.div(
-            [h.Class('grid md:grid-cols-2 gap-8')],
-            testimonials.map((test) =>
-              h.div(
-                [h.Class('glass-panel p-8 md:p-10 rounded-2xl relative')],
-                [
-                  h.div([h.Class('absolute top-6 right-8 text-6xl text-slate-800 font-serif leading-none opacity-50')], ['"']),
-                  h.p([h.Class('text-slate-300 text-lg leading-relaxed mb-8 relative z-10 italic')], [test.quote]),
-                  h.div(
-                    [h.Class('flex items-center gap-4')],
-                    [
-                      h.div([h.Class('w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-indigo-500 flex items-center justify-center text-white font-bold text-xl')], [test.author.charAt(0)]),
-                      h.div(
-                        [],
-                        [
-                          h.div([h.Class('text-white font-bold')], [test.author]),
-                          h.div([h.Class('text-slate-400 text-sm')], [test.role]),
-                        ],
                       ),
                     ],
                   ),
@@ -516,47 +681,77 @@ const testimonialsView = (h: ReturnType<typeof html<Message>>) =>
 
 const contactView = (h: ReturnType<typeof html<Message>>) =>
   h.section(
-    [h.Class('py-32 px-6 relative overflow-hidden'), h.Id('contact')],
     [
-      // Decorative background elements
-      h.div([h.Class('absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none')], []),
-
+      h.Class('py-24 md:py-32 px-6 relative overflow-hidden scroll-mt-20'),
+      h.Id('contact'),
+    ],
+    [
       h.div(
-        [h.Class('max-w-3xl mx-auto text-center relative z-10 glass-panel p-12 rounded-3xl border-slate-800/80')],
         [
-          h.span([h.Class('text-cyan-400 font-mono text-sm inline-block mb-4 px-4 py-1 rounded-full bg-slate-900 border border-slate-800')], ['05 // CONNECT']),
-          h.h2([h.Class('text-4xl md:text-5xl font-bold mb-6')], ['Ready to scale your engineering?']),
+          h.Class(
+            'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none',
+          ),
+          h.Attribute('aria-hidden', 'true'),
+        ],
+        [],
+      ),
+      h.div(
+        [
+          h.Class(
+            'max-w-3xl mx-auto text-center relative z-10 glass-panel p-7 sm:p-12 rounded-3xl border-slate-800/80',
+          ),
+        ],
+        [
+          h.span(
+            [
+              h.Class(
+                'text-cyan-300 font-mono text-sm inline-block mb-4 px-4 py-1 rounded-full bg-slate-950 border border-slate-800',
+              ),
+            ],
+            ['04 // CONNECT'],
+          ),
+          h.h2(
+            [h.Class('text-3xl md:text-5xl font-bold mb-6 text-balance')],
+            ['Have a hard problem worth solving?'],
+          ),
           h.p(
-            [h.Class('text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto')],
-            ['Open for executive opportunities, consulting engagements, or discussing the next big challenge in distributed systems.'],
+            [
+              h.Class(
+                'text-lg text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto',
+              ),
+            ],
+            [
+              'I’m open to focused freelance work, technical collaborations, and conversations about products that deserve careful engineering.',
+            ],
           ),
           h.div(
-            [h.Class('flex flex-col sm:flex-row items-center justify-center gap-6')],
+            [h.Class('flex flex-col items-center justify-center gap-5')],
             [
               h.a(
                 [
-                  h.Class('px-8 py-4 bg-white text-slate-950 hover:bg-slate-200 font-bold rounded-lg transition w-full sm:w-auto shadow-lg flex items-center justify-center gap-3'),
-                  h.Attribute('href', 'mailto:contact@devchris.me'),
+                  h.Class(
+                    'px-7 py-3.5 bg-white text-slate-950 hover:bg-slate-200 font-bold rounded-lg transition w-full sm:w-auto shadow-lg flex items-center justify-center gap-3',
+                  ),
+                  h.Attribute('href', 'mailto:yovano_c@outlook.com'),
                 ],
                 [
                   h.span([h.Class('font-mono opacity-60')], ['✉']),
-                  'contact@devchris.me',
+                  'yovano_c@outlook.com',
                 ],
               ),
               h.div(
-                [h.Class('flex gap-4')],
-                socials.map((social) =>
+                [h.Class('flex flex-wrap justify-center gap-3')],
+                socials.map(social =>
                   h.a(
                     [
-                      h.Class('w-14 h-14 rounded-lg bg-slate-900 border border-slate-700 text-slate-400 flex items-center justify-center hover:bg-slate-800 hover:text-cyan-400 hover:border-cyan-500/50 transition group'),
+                      h.Class(
+                        'px-5 py-3 rounded-lg bg-slate-950 border border-slate-700 text-slate-300 flex items-center justify-center hover:bg-slate-800 hover:text-cyan-300 hover:border-cyan-500/50 transition font-medium',
+                      ),
                       h.Attribute('href', social.url),
                       h.Attribute('target', '_blank'),
                       h.Attribute('rel', 'noopener noreferrer'),
-                      h.Attribute('aria-label', social.name),
                     ],
-                    [
-                      h.span([h.Class('text-xs font-mono font-medium')], [social.name.substring(0, 2).toUpperCase()]),
-                    ],
+                    [`${social.name} ↗`],
                   ),
                 ),
               ),
@@ -574,22 +769,32 @@ const footerView = (h: ReturnType<typeof html<Message>>) =>
     [h.Class('py-8 px-6 border-t border-slate-800/50 bg-slate-950')],
     [
       h.div(
-        [h.Class('max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500')],
+        [
+          h.Class(
+            'max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500',
+          ),
+        ],
         [
           h.div(
             [h.Class('flex items-center gap-2')],
             [
-              h.span([h.Class('w-2 h-2 rounded-full bg-cyan-500')], []),
-              '© 2026 devchris. All rights reserved.',
+              h.span(
+                [
+                  h.Class('w-2 h-2 rounded-full bg-cyan-500'),
+                  h.Attribute('aria-hidden', 'true'),
+                ],
+                [],
+              ),
+              '© 2026 Christopher Yovanovitch.',
             ],
           ),
           h.div(
             [h.Class('font-mono')],
             [
               'Built with ',
-              h.span([h.Class('text-indigo-400')], ['Foldkit']),
+              h.span([h.Class('text-indigo-300')], ['Foldkit']),
               ' & ',
-              h.span([h.Class('text-cyan-400')], ['Effect']),
+              h.span([h.Class('text-cyan-300')], ['Effect']),
             ],
           ),
         ],
