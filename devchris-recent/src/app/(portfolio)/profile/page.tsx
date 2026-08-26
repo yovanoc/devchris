@@ -3,10 +3,9 @@ import { PageLayout } from '~/components-ui/page-layout'
 import { Wrapper } from '~/components-ui/wrapper'
 import { ProfilePic } from '~/components-ui/profile-pic'
 
-const bio =
-  'I am a freelance full-stack software engineer in Lille, France. I build products and developer tools with TypeScript, Rust, Solidity, and Effect, and I care deeply about clear systems that teams can own.'
+const bio = 'lorem ipsum'
 const profilePic: ImageAsset = {
-	url: 'https://devchris.me/profile.png',
+	url: 'https://www.devchris.me/images/profile.jpg',
 	metadata: {
 		dimensions: {
 			width: 100,
