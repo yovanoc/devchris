@@ -43,24 +43,34 @@ export const update = (model: Model, message: Message): UpdateReturn =>
 
 // DATA
 
-const journey = [
+const experience = [
   {
-    index: 'THEN',
-    title: 'Web products',
+    period: 'NOW',
+    role: 'Freelance software engineer',
+    company: 'Lille, France',
     description:
-      'Laravel marketplaces, SaaS starters, and video products taught me to think beyond the code and own the whole experience.',
+      'Building focused products, developer tools, and technical foundations across TypeScript, Effect, Rust, and Solidity.',
   },
   {
-    index: 'NEXT',
-    title: 'Typed tooling',
+    period: '2024',
+    role: 'Chief Technology Officer',
+    company: 'Secrecy',
     description:
-      'Node.js, TypeScript, and Electron pulled me toward libraries, automation, API clients, and developer tools.',
+      'Led technology strategy, product development, continuous improvement, and developer adoption for secrecy.tech.',
   },
   {
-    index: 'NOW',
-    title: 'Deeper systems',
+    period: '2020',
+    role: 'Lead developer',
+    company: 'Secrecy',
     description:
-      'Today I spend more time with Effect, Rust, protocols, and Solidity—still learning the same way: by building real things.',
+      'Built the backend, client-side library, and end-to-end cryptography behind the company’s data protection technology.',
+  },
+  {
+    period: '2016',
+    role: 'Web & mobile developer',
+    company: 'Software publishers & game studios',
+    description:
+      'Started my professional career shipping web and mobile products across software and game development.',
   },
 ]
 
@@ -167,7 +177,7 @@ export const view = (model: Model): Document => {
           [h.Id('content')],
           [
             heroView(h),
-            aboutView(h),
+            experienceView(h),
             skillsView(h),
             projectsView(h),
             contactView(h),
@@ -215,7 +225,7 @@ const navView = (h: ReturnType<typeof html<Message>>, model: Model) =>
               ),
             ],
             [
-              navLink(h, 'about', 'About', model.activeSection),
+              navLink(h, 'experience', 'Career', model.activeSection),
               navLink(h, 'skills', 'Stack', model.activeSection),
               navLink(h, 'projects', 'Work', model.activeSection),
               navLink(h, 'contact', 'Contact', model.activeSection),
@@ -406,11 +416,11 @@ const heroView = (h: ReturnType<typeof html<Message>>) =>
     ],
   )
 
-// ABOUT
+// EXPERIENCE
 
-const aboutView = (h: ReturnType<typeof html<Message>>) =>
+const experienceView = (h: ReturnType<typeof html<Message>>) =>
   h.section(
-    [h.Class('py-24 px-6 bg-slate-900/30 scroll-mt-20'), h.Id('about')],
+    [h.Class('py-24 px-6 bg-slate-900/30 scroll-mt-20'), h.Id('experience')],
     [
       h.div(
         [h.Class('max-w-6xl mx-auto')],
@@ -420,23 +430,37 @@ const aboutView = (h: ReturnType<typeof html<Message>>) =>
             [
               h.span(
                 [h.Class('text-indigo-300 font-mono text-sm')],
-                ['01 // ABOUT'],
+                ['01 // EXPERIENCE'],
               ),
               h.h2(
                 [h.Class('text-3xl md:text-5xl font-bold mt-3 text-balance')],
-                ['I learn by building.'],
+                ['From shipping products to setting technical direction.'],
               ),
               h.p(
                 [h.Class('text-lg text-slate-400 mt-5 leading-relaxed')],
                 [
-                  'I started with PHP and Laravel, moved through Node.js, TypeScript, and Electron, and now spend most of my time around Effect, Rust, and typed protocol tooling. The stack keeps changing; the curiosity does not.',
+                  'I started professionally in 2016 with web and mobile products, then moved deeper into backend engineering, client libraries, end-to-end cryptography, and technology leadership.',
                 ],
+              ),
+              h.a(
+                [
+                  h.Class(
+                    'inline-block mt-5 text-sm font-medium text-cyan-300 hover:text-cyan-200 transition',
+                  ),
+                  h.Attribute(
+                    'href',
+                    'https://www.cyberexperts.tech/yovanovitch-nomme-cto-de-secrecy-pour-accompagner-et-accelerer-le-developpement-de-secrecy-tech/',
+                  ),
+                  h.Attribute('target', '_blank'),
+                  h.Attribute('rel', 'noopener noreferrer'),
+                ],
+                ['CTO appointment at Secrecy ↗'],
               ),
             ],
           ),
           h.div(
-            [h.Class('grid md:grid-cols-3 gap-6')],
-            journey.map(item =>
+            [h.Class('grid md:grid-cols-2 gap-6')],
+            experience.map(item =>
               h.article(
                 [
                   h.Class(
@@ -446,11 +470,15 @@ const aboutView = (h: ReturnType<typeof html<Message>>) =>
                 [
                   h.span(
                     [h.Class('text-cyan-400 font-mono text-sm')],
-                    [item.index],
+                    [item.period],
                   ),
                   h.h3(
-                    [h.Class('text-xl font-bold text-white mt-8 mb-3')],
-                    [item.title],
+                    [h.Class('text-xl font-bold text-white mt-7 mb-2')],
+                    [item.role],
+                  ),
+                  h.p(
+                    [h.Class('text-indigo-300 font-medium mb-4')],
+                    [item.company],
                   ),
                   h.p(
                     [h.Class('text-slate-400 leading-relaxed')],
