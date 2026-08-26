@@ -11,7 +11,7 @@ describe('personal landing page', () => {
       { update, view },
       given(initialModel),
       expect(
-        role('heading', { name: /software that feels simple/i }),
+        role('heading', { name: /product idea to protocol detail/i }),
       ).toExist(),
       expect(role('link', { name: 'GitHub ↗' })).toHaveAttr(
         'href',

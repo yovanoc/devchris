@@ -43,24 +43,24 @@ export const update = (model: Model, message: Message): UpdateReturn =>
 
 // DATA
 
-const approach = [
+const journey = [
   {
-    index: '01',
-    title: 'Product-minded engineering',
+    index: 'THEN',
+    title: 'Web products',
     description:
-      'I start with the problem, ship the smallest coherent solution, and stay close to the people who use it.',
+      'Laravel marketplaces, SaaS starters, and video products taught me to think beyond the code and own the whole experience.',
   },
   {
-    index: '02',
-    title: 'Systems that stay legible',
+    index: 'NEXT',
+    title: 'Typed tooling',
     description:
-      'Strong types, explicit boundaries, and boring operations beat clever code that only its author can run.',
+      'Node.js, TypeScript, and Electron pulled me toward libraries, automation, API clients, and developer tools.',
   },
   {
-    index: '03',
-    title: 'Depth when it matters',
+    index: 'NOW',
+    title: 'Deeper systems',
     description:
-      'From protocol clients to performance-sensitive Rust, I enjoy the details that turn fragile ideas into dependable tools.',
+      'Today I spend more time with Effect, Rust, protocols, and Solidity—still learning the same way: by building real things.',
   },
 ]
 
@@ -95,6 +95,14 @@ const projects = [
     tags: ['TypeScript', 'Effect', 'CDP'],
   },
   {
+    name: 'devchris',
+    description:
+      'The site you are reading: a Foldkit and Effect application deployed to Cloudflare with Alchemy.',
+    detail: 'Live project · devchris.me',
+    url: 'https://github.com/yovanoc/devchris',
+    tags: ['Foldkit', 'Effect', 'Cloudflare'],
+  },
+  {
     name: 'finary',
     description: 'A focused Rust API client for integrating with Finary.',
     detail: 'Open source · Rust',
@@ -123,14 +131,6 @@ const projects = [
     detail: 'Open source · PHP',
     url: 'https://github.com/yovanoc/codetube',
     tags: ['PHP', 'Laravel', 'Product'],
-  },
-  {
-    name: 'saas',
-    description:
-      'A practical starter for building software-as-a-service products with Laravel.',
-    detail: 'Open source · PHP',
-    url: 'https://github.com/yovanoc/saas',
-    tags: ['PHP', 'Laravel', 'SaaS'],
   },
 ]
 
@@ -167,7 +167,7 @@ export const view = (model: Model): Document => {
           [h.Id('content')],
           [
             heroView(h),
-            approachView(h),
+            aboutView(h),
             skillsView(h),
             projectsView(h),
             contactView(h),
@@ -301,7 +301,7 @@ const heroView = (h: ReturnType<typeof html<Message>>) =>
                     ],
                     [],
                   ),
-                  'LILLE, FRANCE · BUILDER BY NATURE',
+                  'FREELANCE · LILLE, FRANCE',
                 ],
               ),
               h.p(
@@ -319,10 +319,10 @@ const heroView = (h: ReturnType<typeof html<Message>>) =>
                   ),
                 ],
                 [
-                  'I turn hard problems into ',
+                  'Hi, I’m Chris. I build from ',
                   h.span(
                     [h.Class('gradient-text')],
-                    ['software that feels simple.'],
+                    ['product idea to protocol detail.'],
                   ),
                 ],
               ),
@@ -333,7 +333,7 @@ const heroView = (h: ReturnType<typeof html<Message>>) =>
                   ),
                 ],
                 [
-                  'Full-stack software engineer working across TypeScript, Rust, and Solidity—from product architecture to the details that make systems last.',
+                  'TypeScript is home base; Rust, Solidity, and Effect are how I keep going deeper. I care about useful products, explicit systems, and code the next person can own.',
                 ],
               ),
               h.div(
@@ -389,7 +389,7 @@ const heroView = (h: ReturnType<typeof html<Message>>) =>
                     [
                       h.p(
                         [h.Class('text-white font-semibold')],
-                        ['Software engineer'],
+                        ['Freelance software engineer'],
                       ),
                       h.p(
                         [h.Class('text-slate-400 text-sm mt-1 font-mono')],
@@ -406,9 +406,9 @@ const heroView = (h: ReturnType<typeof html<Message>>) =>
     ],
   )
 
-// APPROACH
+// ABOUT
 
-const approachView = (h: ReturnType<typeof html<Message>>) =>
+const aboutView = (h: ReturnType<typeof html<Message>>) =>
   h.section(
     [h.Class('py-24 px-6 bg-slate-900/30 scroll-mt-20'), h.Id('about')],
     [
@@ -420,23 +420,23 @@ const approachView = (h: ReturnType<typeof html<Message>>) =>
             [
               h.span(
                 [h.Class('text-indigo-300 font-mono text-sm')],
-                ['01 // APPROACH'],
+                ['01 // ABOUT'],
               ),
               h.h2(
                 [h.Class('text-3xl md:text-5xl font-bold mt-3 text-balance')],
-                ['Builder first. Systems thinker always.'],
+                ['I learn by building.'],
               ),
               h.p(
                 [h.Class('text-lg text-slate-400 mt-5 leading-relaxed')],
                 [
-                  'Curious by default, I enjoy ambitious technical challenges and care about the quality of the systems I lead from idea to production.',
+                  'I started with PHP and Laravel, moved through Node.js, TypeScript, and Electron, and now spend most of my time around Effect, Rust, and typed protocol tooling. The stack keeps changing; the curiosity does not.',
                 ],
               ),
             ],
           ),
           h.div(
             [h.Class('grid md:grid-cols-3 gap-6')],
-            approach.map(item =>
+            journey.map(item =>
               h.article(
                 [
                   h.Class(
@@ -576,7 +576,7 @@ const projectsView = (h: ReturnType<typeof html<Message>>) =>
                   ),
                   h.h2(
                     [h.Class('text-3xl md:text-5xl font-bold mt-3')],
-                    ['Open source, across the stack.'],
+                    ['A trail of things I wanted to understand.'],
                   ),
                 ],
               ),
@@ -587,7 +587,7 @@ const projectsView = (h: ReturnType<typeof html<Message>>) =>
                   ),
                 ],
                 [
-                  'Public work spanning typed tooling, Rust clients, algorithms, and web products.',
+                  'Each project marks a real curiosity—from shipping web products to exploring protocols, types, and lower-level systems.',
                 ],
               ),
             ],
@@ -712,7 +712,7 @@ const contactView = (h: ReturnType<typeof html<Message>>) =>
           ),
           h.h2(
             [h.Class('text-3xl md:text-5xl font-bold mb-6 text-balance')],
-            ['Have a hard problem worth solving?'],
+            ['Let’s build something useful.'],
           ),
           h.p(
             [
@@ -721,7 +721,7 @@ const contactView = (h: ReturnType<typeof html<Message>>) =>
               ),
             ],
             [
-              'I’m open to focused freelance work, technical collaborations, and conversations about products that deserve careful engineering.',
+              'I’m available for focused freelance projects and technical collaborations. If you have a product to ship, a system to untangle, or an idea that needs a technical partner, say hello.',
             ],
           ),
           h.div(
@@ -785,7 +785,7 @@ const footerView = (h: ReturnType<typeof html<Message>>) =>
                 ],
                 [],
               ),
-              '© 2026 Christopher Yovanovitch.',
+              '© 2026 Christopher Yovanovitch · Lille, France.',
             ],
           ),
           h.div(
